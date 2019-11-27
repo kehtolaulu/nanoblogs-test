@@ -7,7 +7,7 @@ public class StoryData {
         this.text = text;
     }
 
-    String getText() {
+    public String getText() {
         return text;
     }
 }

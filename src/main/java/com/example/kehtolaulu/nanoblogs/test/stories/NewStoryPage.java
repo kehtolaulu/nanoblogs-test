@@ -5,15 +5,12 @@ import org.openqa.selenium.By;
 
 public class NewStoryPage extends Page {
     @Override
-    public void open() {
-        clickElement(By.linkText("Nanoblogs"));
-        clickElement(By.linkText("New Story"));
-        await();
+    public void visit() {
+        navigation().visitNewStoryPage();
     }
 
     public void createStory(StoryData storyData) {
         input(storyData.getText()).toElement(By.id("story_content"));
         clickElement(By.name("commit"));
-        await();
     }
 }

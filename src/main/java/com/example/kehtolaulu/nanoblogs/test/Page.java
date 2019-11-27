@@ -1,29 +1,47 @@
 package com.example.kehtolaulu.nanoblogs.test;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 public abstract class Page {
     private WebDriver driver;
-    private static final String baseUrl = "https://nanoblogs.herokuapp.com/";
+    private Navigation navigation;
 
     public Page() {
         driver = DriverHolder.driver();
-        driver.get(baseUrl);
+        navigation = new Navigation(driver);
+        navigation.visitHome();
         await();
     }
 
-    protected void await() {
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    protected Navigation navigation() {
+        return navigation;
     }
 
-    protected abstract void open();
+    public abstract void visit();
 
-    private WebElement element(By selector) {
-        return driver.findElement(selector);
+    public ElementPresent isElement(By selector) {
+        return () -> element(selector).isDisplayed();
+    }
+
+    public <T> T ifAlert(Function<? super Alert, T> action) {
+        return ExpectedConditions.alertIsPresent().andThen(action).apply(driver);
+    }
+
+    public boolean isAlertPresent() {
+        try {
+            driver.switchTo().alert();
+            return true;
+        } catch (NoAlertPresentException e) {
+            return false;
+        }
+    }
+
+    public boolean hasText(String text) {
+        return !driver.findElements(By.xpath("//*[contains(text(),'" + text + "')]")).isEmpty();
     }
 
     protected InputElement input(String text) {
@@ -34,17 +52,21 @@ public abstract class Page {
         };
     }
 
+    private WebElement element(By selector) {
+        return driver.findElement(selector);
+    }
+
     protected void clickElement(By selector) {
         element(selector).click();
     }
 
-    private void close() {
-        driver.quit();
+    protected void await() {
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
 
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        close();
+        driver.quit();
     }
 }

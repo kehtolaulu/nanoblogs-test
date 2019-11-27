@@ -4,6 +4,8 @@ import com.example.kehtolaulu.nanoblogs.test.auth.AuthenticationPage;
 import com.example.kehtolaulu.nanoblogs.test.auth.UserData;
 import org.junit.*;
 
+import static org.junit.Assert.assertTrue;
+
 public class LogInTest {
     private static AuthenticationPage authPage;
     private UserData credentials;
@@ -20,8 +22,13 @@ public class LogInTest {
 
     @Test
     public void testLogIn() {
-        authPage.open();
+        authPage.visit();
         authPage.login(credentials);
+        assertTrue("User logged in", authPage.hasText("sign out"));
+    }
+
+    @After
+    public void logOut() {
         authPage.logOut();
     }
 }

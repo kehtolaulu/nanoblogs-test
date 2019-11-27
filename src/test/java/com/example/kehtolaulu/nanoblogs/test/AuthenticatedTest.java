@@ -6,8 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-abstract
-public class AuthenticatedTest {
+public abstract class AuthenticatedTest {
     private static AuthenticationPage authPage;
     private UserData userData;
 
@@ -19,11 +18,10 @@ public class AuthenticatedTest {
     }
 
     @Before
-    final
     public void logIn() {
         init();
         userData = new UserData("aivvent@yandex.ru", "123456");
-        authPage.open();
+        authPage.visit();
         authPage.login(userData);
     }
 
