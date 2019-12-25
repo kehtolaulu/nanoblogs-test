@@ -20,7 +20,7 @@ public class MyProfilePage extends Page {
         );
     }
 
-    public void editStory(StoryData storyData) {
+    public void updateStory(StoryData storyData) {
         clickElement(By.linkText("Edit"));
         input(storyData.getText()).toElement(By.id("story_content"));
         clickElement(By.name("commit"));
